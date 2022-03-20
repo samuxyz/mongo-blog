@@ -313,7 +313,6 @@ If you want to verify that you setup everything correctly, take a look at projec
 
 The easiest way to setup our MongoDB database is to rely on a cloud service such as [Mongo Atlas](https://www.mongodb.com/cloud/atlas/lp/try2). They host databases on AWS, Google Cloud, Azure and provide several options to operate and scale MongoDB painlessly.
 
-After signing-up you will be asked to fill-in a quick survey about the project.
 
 In the plan page, choose the "shared" plan which starts for free:
 [mongo-plan]
