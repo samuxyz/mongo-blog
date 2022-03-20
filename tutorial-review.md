@@ -47,7 +47,7 @@ cd mongo-blog
 npx express-generator
 ```
 
-By using npx we can execute express-generator without installing the packeage.
+By using npx we can execute express-generator without installing the package.
 
 You will be prompted several questions to create the `package.json` file such as the project's name, version, and more.
 Add the following code to the `package.json` file::
@@ -115,10 +115,50 @@ Open your `package.json` and add one more command under `scripts`:
 In `app.js` we are going to require `cors` and attach it to the app:
 
 ```javascript
-...
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const cors = require('cors');
-...
+
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+
+const app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;
+=
 ```
 
 To model our application data and connect to a Mongo database to store posts we are going to use `mongoose` as it is a very straight-forward ORM built for Node:
@@ -127,7 +167,7 @@ To model our application data and connect to a Mongo database to store posts we 
 yarn add mongoose
 ```
 
-Finally, we need to add an extra script to build the client `bundle.js` to be returned:
+Finally, we need to add an extra script to build the client `bundle.js` to be returned. In package.json, add the extra script so your file looks like this:
 
 ```bash
 {
@@ -233,6 +273,41 @@ Lastly, let's talk about styling. We don't really want to spend too much time de
 yarn add bootstrap@5.1.3 react-bootstrap
 ```
 
+If you want to verify that you setup everything correctly, take a look at project directory structure:
+
+```
+├── app.js
+├── bin
+│   └── www
+├── package.json
+├── public
+│   ├── images
+│   ├── javascripts
+│   └── stylesheets
+│       └── style.css
+├── routes
+│   ├── index.js
+│   └── users.js
+└── views
+    ├── error.pug
+    ├── index.pug
+    └── layout.pug
+└── client
+    ├── package.json
+    ├── yarn.lock
+    ├── public
+    └── src
+        ├── App.js
+        ├── App.css
+        ├── App.test.js
+        ├── index.js
+        ├── index.css
+        ├── logo.svg
+        ├── reportWebVitals.js
+        └── setupTests.js
+
+```
+
 ### Create a database on Mongo Atlas
 
 The easiest way to setup our MongoDB database is to rely on a cloud service such as [Mongo Atlas](https://www.mongodb.com/cloud/atlas/lp/try2). They host databases on AWS, Google Cloud, Azure and provide several options to operate and scale MongoDB painlessly.
@@ -249,7 +324,7 @@ Next, choose the cloud provider and region, leave the default values for "cluste
 
 
 
-In the dashboard "quickstart" go ahead and create a username and password as we will need that to connecto the database later on. Plus, we can restrict IP access to the database. This is very important measure when going to production with a real app but for the purpose of the tutorial we can simply add `0.0.0.0/0` to allow access from any IP.
+In the dashboard "quickstart" go ahead and create a username and password as we will need that to connect the database later on. Plus, we can restrict IP access to the database. This is very important measure when going to production with a real app but for the purpose of the tutorial we can simply add `0.0.0.0/0` to allow access from any IP.
 
 [mongo-db-setup-1]
 [mongo-db-setup 2]
@@ -329,7 +404,7 @@ The basic schema for a blog post is defined by a title, the content of the post,
 
 Mongoose straightforward syntax makes creating models a very simple operation.
 
-In `mongo-blog-server`create a new folder `/models` and a new file `post.js` in it:
+In `mongo-blog`create a new folder `/models` and a new file `post.js` in it:
 
 ```bash
 mkdir models
@@ -557,7 +632,7 @@ Here are the proposed URLs:
 | /posts/new | Page to create a new post 
 | /posts/:post_id/edit | Page to edit a post
 
-In our code, the routes will all reside under `/app.js` using `react-router-dom` components `Routes` and `Route`:
+In our code, the routes will all reside under `/client/src/App.js` using `react-router-dom` components `Routes` and `Route`:
 
 ```javascript
 
@@ -577,7 +652,7 @@ export default App;
 
 In this example we are rendering the `Home` component when the browser hits the homepage.
 
-`app.js` acts as the root component of our client so we can imagine the shared layout of our blog being render through `App`: The Navbar with a button to create a new post is always visible on every page of our client application so it's only natural to render it here:
+`App.js` acts as the root component of our client so we can imagine the shared layout of our blog being render through `App`: The Navbar with a button to create a new post is always visible on every page of our client application so it's only natural to render it here:
 
 ```javascript
 // Import Bootstrap CSS
@@ -717,7 +792,7 @@ To render the list of posts Home has to
 2. Store the array posts in the state
 3. Render the posts to the user and link them to `/posts/:post_id` to read the content
 
-In the terminal create a folder `/pages` and a file `home.js` in it:
+Under `/client`, create a folder `/pages` and a file `home.js` in it:
 
 ```bash
 mkdir pages
@@ -891,6 +966,12 @@ The UI will show a form filled with the blog post data for title, author, conten
 
 Note that we are using `react-hook-form` to register fields, collect the data and submit to the server. For the purpose of the tutorial we are not performing any validation on the data but it is fairly simple to be added thanks to react-hook-form simple API.
 
+Open the terminal and create `edit.js` under `/pages`:
+
+```bash
+touch edit.js
+```
+
 ```javascript
 import { useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -1033,6 +1114,17 @@ Congratulations, we finished the UI as well so we are now ready to deploy our bl
 
 
 ## Deploy the app on Koyeb
+
+Ready to deploy our app on Koyeb? Make sure to commit the repo to your Github account. If you are unsure how to, go back to the terminal and run the following commands:
+
+```bash
+git init git remote add origin git@github.com:<YOUR_GITHUB_USERNAME>/<YOUR_GITHUB_REPOSITORY>.git
+git add .
+git commit -m "Initial commit"
+git push -u origin main
+```
+
+We are basically linking the local repo to remote, commit the changes and push our code to the remote origin on Github.
 
 Let's login on Koyeb and in the Control Panel click on the button "Create App".
 
