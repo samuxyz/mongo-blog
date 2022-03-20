@@ -47,6 +47,8 @@ cd mongo-blog
 npx express-generator
 ```
 
+By using npx we can execute express-generator without installing the packeage.
+
 You will be prompted several questions to create the `package.json` file such as the project's name, version, and more.
 Add the following code to the `package.json` file::
 
@@ -80,6 +82,8 @@ In your terminal go ahead and install them:
 yarn add nodemon --save-dev
 yarn add cors
 ```
+
+Note that the option "--save-dev" installed nodemon as devDependency as we only need it for local development.
 
 Open your `package.json` and add one more command under `scripts`:
 
