@@ -197,7 +197,7 @@ Finally, we need to add an extra script to build the client `bundle.js` to be re
 
 Let's run `npm install` in the terminal and we can now move to the client setup.
 
-First, create a folder `/client` and install React using `create-react-app`:
+First, at the root of your project directory create a folder `/client` and install React using `create-react-app`:
 
 ```bash
 npx create-react-app .
