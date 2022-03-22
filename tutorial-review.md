@@ -18,7 +18,7 @@ The second part, instead, will focus on creating a microservice to add extra sea
 ## Requirements
 
 - A local environment with NPM and Node.js installed
-- Basic knowledge of JavaScript, Express, React and querying a MongoDB database using Mongoose
+- A [MongoDB Atlas account](https://www.mongodb.com/cloud/atlas/register) to create a managed MongoDB database 
 - A [Postman account](https://www.postman.com/) to test the API
 - A [GitHub account](https://github.com) to version and deploy your application code on Koyeb
 - A [Koyeb account](https://app.koyeb.com) to deploy and run the application
