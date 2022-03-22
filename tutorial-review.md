@@ -319,8 +319,6 @@ In the plan page, choose the "shared" plan which starts for free:
 
 Next, choose the cloud provider and region, leave the default values for "cluster tier", "additional settings" and choose a cluster name, "mongo-blog-db".
 
-[mongo-deployment-1]
-[mongo-deployment-2]
 
 
 
