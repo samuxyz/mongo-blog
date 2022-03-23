@@ -55,7 +55,7 @@ Add the following code to the `package.json` file::
 
 ```
 {
-  "name": "mongo-blog-server",
+  "name": "mongo-blog",
   "version": "0.0.0",
   "private": true,
   "scripts": {
