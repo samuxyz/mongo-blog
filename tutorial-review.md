@@ -159,7 +159,6 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-=
 ```
 
 To model our application data and connect to a Mongo database to store posts we are going to use `mongoose` as it is a very straight-forward ORM built for Node:
