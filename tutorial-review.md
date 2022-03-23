@@ -72,17 +72,18 @@ Add the following code to the `package.json` file::
 }
 ```
 
-Next, we are going to add 3 more packages:
+Next, we are going to add 5 more packages:
 
 - `nodemon` to reload the server. As we are developing in our local environment, we want our server to reload whenever a change in the code occurs.
 - `cors` to allow cross-origin resource sharing. This is important when the React-based client calls the server API in our local environment.
 - `mongoose` to model our application data and connect to a Mongo database to store posts, a very straight-forward ORM built for Node.
+- `bootstrap@5.1.3` and `react-bootstrap` since we don't really want to spend too much time dealing with CSS. Specifically, `react-bootstrap` includes all the UI components we need without really adding CSS.
 
 In your terminal go ahead and install them:
 
 ```bash
 yarn add nodemon --save-dev
-yarn add cors mongoose
+yarn add cors mongoose bootstrap@5.1.3 react-bootstrap
 ```
 
 Note that the option "--save-dev" installed nodemon as devDependency as we only need it for local development.
@@ -260,12 +261,6 @@ As both server and client share the same repo, the folder `/public` in the root 
     ]
   }
 }
-```
-
-Lastly, let's talk about styling. We don't really want to spend too much time dealing with CSS so we are using Bootstrap, specifically `react-bootstrap` so that we can include all the UI components we need without really adding CSS:
-
-```bash
-yarn add bootstrap@5.1.3 react-bootstrap
 ```
 
 If you want to verify that you setup everything correctly, take a look at project directory structure:
