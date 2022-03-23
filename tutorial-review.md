@@ -72,16 +72,17 @@ Add the following code to the `package.json` file::
 }
 ```
 
-Next, we are going to add 2 more packages:
+Next, we are going to add 3 more packages:
 
 - `nodemon` to reload the server. As we are developing in our local environment, we want our server to reload whenever a change in the code occurs.
 - `cors` to allow cross-origin resource sharing. This is important when the React-based client calls the server API in our local environment.
+- `mongoose` to model our application data and connect to a Mongo database to store posts, a very straight-forward ORM built for Node.
 
 In your terminal go ahead and install them:
 
 ```bash
 yarn add nodemon --save-dev
-yarn add cors
+yarn add cors mongoose
 ```
 
 Note that the option "--save-dev" installed nodemon as devDependency as we only need it for local development.
@@ -159,12 +160,6 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-```
-
-To model our application data and connect to a Mongo database to store posts we are going to use `mongoose` as it is a very straight-forward ORM built for Node:
-
-```bash
-yarn add mongoose
 ```
 
 Finally, we need to add an extra script to build the client `bundle.js` to be returned. In package.json, add the extra script so your file looks like this:
