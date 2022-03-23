@@ -91,7 +91,7 @@ Open your `package.json` and add one more command under `scripts`:
 ```bash
 
 {
-  "name": "mongo-blog-server",
+  "name": "mongo-blog",
   "version": "0.0.0",
   "private": true,
   "scripts": {
