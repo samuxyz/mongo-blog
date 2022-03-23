@@ -338,7 +338,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 ```
 
-Since we decided to get the connection string as an environment variable, to test it in development we can add it to the `package.json`:
+Since we decided to get the connection string as an environment variable, to test it in development we can add it to the package.json located in the root directory:
 
 ```bash
 {
@@ -491,7 +491,7 @@ router.get('/:id', async (req, res, next) => {
 });
 ```
 
-Note that if we cannot find any post with that id, we are still returning a positive 200 HTTP status with an empty object as post.
+If we cannot find any post with the id that is passed, we still return a positive 200 HTTP status with an empty object as the post.
 
 At this point we have functioning endpoints but without posts in the DB we cannot really do much. Let's fix this by creating a POST `/api/posts` endpoint:
 In `req.body` we collect the title, author, content and tags coming from the client, then create a new post save it into the DB:
@@ -722,7 +722,7 @@ export default App;
 
 Our client will have to make API calls to the server to perform operations on the database, this is why we installed `axios` at the beginning of this tutorial. It is now time to use it, however we can wrap inside a `http` library file and export it as a module:
 
-1. We need to take into account that making API calls in local is like calling a different server as client and servers run on different ports, a complete different configuration compared to the deployment on Koyeb later on.
+1. We need to take into account that making API calls in local is like calling a different server. As client and servers run on different ports, this is a completely different configuration compared to the deployment we will do on Koyeb later on.
 2. The HTTP object is exported along with the basic methods to call GET, POST, PUT and DELETE endpoints.
 
 Create a new folder `/lib` and inside add `http.js`
@@ -772,6 +772,8 @@ export default methods;
 We will see how to use the `http` object in the next section.
 
 ### Create containers and reusable components
+
+React is component-based, meaning that we can create small and encapsulated components and reuse them all over the web application as basic building pieces for more complex UIs.
 
 The very first component we are going to build is `Home`, in charge of rendering the list of posts as well as the header of the homepage.
 To render the list of posts Home has to 
