@@ -313,7 +313,6 @@ Next, choose the cloud provider and region, leave the default values for "cluste
 
 In the dashboard "quickstart" go ahead and create a username and password as we will need that to connect the database later on. Plus, we can restrict IP access to the database. This is very important measure when going to production with a real app but for the purpose of the tutorial we can simply add `0.0.0.0/0` to allow access from any IP.
 
-[mongo-db-setup-1]
 [mongo-db-setup 2]
 
 The database will successfully deploy in a few minutes, in the meantime we can click on the "connect" button, choose "connect your application" and copy the connection string.
