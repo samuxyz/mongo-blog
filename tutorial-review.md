@@ -772,7 +772,7 @@ Our client will have to make API calls to the server to perform operations on th
 1. We need to take into account that making API calls in local is like calling a different server. As client and servers run on different ports, this is a completely different configuration compared to the deployment we will do on Koyeb later on.
 2. The HTTP object is exported along with the basic methods to call GET, POST, PUT and DELETE endpoints.
 
-Create a new folder `/lib` and inside add `http.js`
+In `/client/src`, create a new folder `/lib` and inside add an `http.js` file:
 
 ```bash
   mkdir lib
