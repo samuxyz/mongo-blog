@@ -313,7 +313,6 @@ Next, choose the cloud provider and region, leave the default values for "cluste
 
 In the dashboard "quickstart" go ahead and create a username and password as we will need that to connect the database later on. Plus, we can restrict IP access to the database. This is very important measure when going to production with a real app but for the purpose of the tutorial we can simply add `0.0.0.0/0` to allow access from any IP.
 
-[mongo-db-setup 2]
 
 The database will successfully deploy in a few minutes, in the meantime we can click on the "connect" button, choose "connect your application" and copy the connection string.
 
@@ -443,13 +442,13 @@ Now that we have completed the modelling of our blog posts we can create API end
 
 ### Create CRUD endpoints using express routes
 
-Thanks to `express-generator` scaffolding we already have the routes folder `/routes` inside `mongo-blog-server`. In the terminal create a new file `posts.js` inside of it:
+Thanks to `express-generator` scaffolding we already have the routes folder `/routes` inside `mongo-blog`. In the terminal create a new file `posts.js` inside of it:
 
 ```bash
 touch /routes/posts.js
 ```
 
-Using express `Router` object we are going to create each endpoint. The first one, GET `/api/posts` retrieves the posts using our newly create Post model function `find()`, sort them using `sort()` and then return the whole list to the client:
+Using the express `Router` object we are going to create each endpoint. The first one, GET `/api/posts` retrieves the posts using our newly create Post model function `find()`, sort them using `sort()` and then return the whole list to the client:
 
 ```javascript
 const express = require('express');
@@ -492,7 +491,7 @@ router.get('/:id', async (req, res, next) => {
 
 If we cannot find any post with the id that is passed, we still return a positive 200 HTTP status with an empty object as the post.
 
-At this point we have functioning endpoints but without posts in the DB we cannot really do much. Let's fix this by creating a POST `/api/posts` endpoint:
+At this point, we have functioning endpoints but without any posts in the database, so we cannot really do much. To change this, we will create a POST `/api/posts` endpoint, so we can start adding posts.
 In `req.body` we collect the title, author, content and tags coming from the client, then create a new post save it into the DB:
 
 ```javascript
@@ -536,7 +535,8 @@ router.put('/:id', async (req, res, next) => {
 });
 ```
 
-The only action left is the ability of deleting a specific blog post by sending its id. Mongoose once again provides a function `deleteOne` we can use to tell Mongo to delete the post with that id:
+The last action we will add is the ability to delete a specific blog post by sending its `id`. Mongoose once again provides a function `deleteOne` that we can use to tell our Mongo database to delete the post with that `id`:
+
 
 ```javascript
 ...
@@ -554,7 +554,7 @@ router.delete('/:id', async (req, res, next) => {
 module.exports = router;
 ```
 
-We completed our new router, we just have to attach it to our server and test it out with POSTMAN. Open `app.js` and under `indexRouter` go ahead and add `postsRouter` as well:
+Following the steps above, we have just built our new router. Now, we have to attach it to our server and test it out using POSTMAN, an API platform for building and using APIs. Open `app.js` and under `indexRouter` go ahead and add `postsRouter` as well:
 
 ```javascript
 const createError = require('http-errors');
@@ -633,7 +633,7 @@ To make sure the post was really created, we can make a call to `http://localhos
 
 NB: Since we have just one post, the result of the API calls should be almost the same as GET `/api/posts` returns an array of posts with a single item in it.
 
-How about updating the post? let's change the title and add an extra tag:
+If you want to update the post, for example if you want to change the title and add an extra tag, **add instructions about how to do this**:
 
 [update-post]
 
@@ -641,7 +641,7 @@ If you are unsure whether it was correctly updated, go ahead and call GET `/api/
 
 [get-updated-post]
 
-it's not time to delete it:
+Finally, test that deleting the post works as expected:
 
 [delete-post]
 
@@ -665,7 +665,7 @@ Here are the proposed URLs:
 | /posts/new | Page to create a new post 
 | /posts/:post_id/edit | Page to edit a post
 
-In our code, the routes will all reside under `/client/src/App.js` using `react-router-dom` components `Routes` and `Route`:
+In our code, the routes will all reside under `/client/src/App.js` using `react-router-dom` components `Routes` and `Route`. Move into `App.js` and edit the file with the following:
 
 ```javascript
 
@@ -685,7 +685,7 @@ export default App;
 
 In this example we are rendering the `Home` component when the browser hits the homepage.
 
-`App.js` acts as the root component of our client so we can imagine the shared layout of our blog being render through `App`: The Navbar with a button to create a new post is always visible on every page of our client application so it's only natural to render it here:
+`App.js` acts as the root component of our client so we can imagine the shared layout of our blog being rendered through `App.js`. Our blog page will have a Navbar with a button that will let you create a new post. This Navbar will be visible on every page of our client application, so it is best to render it here in `App.js`:
 
 ```javascript
 // Import Bootstrap CSS
@@ -766,7 +766,9 @@ export default App;
 
 ### Axios client
 
-Our client will have to make API calls to the server to perform operations on the database, this is why we installed `axios` at the beginning of this tutorial. It is now time to use it, however we can wrap inside a `http` library file and export it as a module:
+Our client will have to make API calls to the server to perform operations on the database. This is why we installed `axios` earlier. It is now time to use it. 
+
+We will wrap it inside an `http` library file and export it as a module. We do this for two reasons:
 
 1. We need to take into account that making API calls in local is like calling a different server. As client and servers run on different ports, this is a completely different configuration compared to the deployment we will do on Koyeb later on.
 2. The HTTP object is exported along with the basic methods to call GET, POST, PUT and DELETE endpoints.
@@ -918,7 +920,7 @@ The resulting UI will look like this:
 
 [react-homepage]
 
-The logic behind showing the blog post content is not too different than the one we saw for `Home`:
+Next, we will set up the part of the UI to display the blog posts. The logic behind showing the blog post content is not too different than the one we saw for `Home`:
 
 1. When hitting `/posts/post_id` the client calls the server API to fetch the specific blog post.
 2. The post is stored in the component state.
