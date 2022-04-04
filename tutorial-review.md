@@ -330,11 +330,13 @@ A typical connection string should look  like this:
 mongodb+srv://samuele:<password>@mongo-client-db.r5bv5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 ```
 
+Remember to replace `password` with the password of your user and `myFirstDatabase` with the actual database name you chose.
+
 Move back the codebase, open `app.js` to require mongoose, connect it to the database by using the connection string and recover from potential errors:
 
 ```javascript
 const mongoose = require('mongoose');
-const CONNECTION_STRING = `process.env.CONNECTION_STRING` // env variable we can defined in the package.json containing the connection string and pwd
+const CONNECTION_STRING = `YOUR_CONNECTION_STRING` // Later replaced by env variable
 
 // setup connection to mongo
 mongoose.connect(CONNECTION_STRING);
@@ -343,40 +345,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 ```
 
-Since we decided to get the connection string as an environment variable, to test it in development we can add it to the package.json located in the root directory:
-
-```bash
-{
-  "name": "mongo-blog",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "nodemon ./bin/www",
-    "start": "node ./bin/www",
-    "build-client": "cd ./client && yarn build"
-  },
-  "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "cors": "^2.8.5",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
-    "jade": "~1.11.0",
-    "mongoose": "^6.2.3",
-    "morgan": "~1.9.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
-  },
-+ "nodemonConfig": {
-+   "env": {
-+     "MONGO_PWD": "YOUR_MONGO_USER_PWD"
-+   }
-+ }
-}
-
-```
-
+To test the connection, just run the command `npm run dev` in the terminal and you should not see any error on console.
 
 ## Create the Blog post Model
 
@@ -571,7 +540,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const CONNECTION_STRING = `mongodb+srv://samuxyz:${process.env.MONGO_PWD}@blog.dymgs.mongodb.net/Blog?retryWrites=true&w=majority`;
+const CONNECTION_STRING = `YOUR_CONNECTION_STRING`;
 
 const indexRouter = require('./routes/index');
 const postsRouter = require('./routes/posts');
@@ -1159,7 +1128,11 @@ Congratulations, we finished the UI as well so we are now ready to deploy our bl
 
 ## Deploy the app on Koyeb
 
-Ready to deploy our app on Koyeb? Make sure to commit the repo to your Github account. If you are unsure how to, go back to the terminal and run the following commands:
+Before we dive into the steps to deploy on the Koyeb, we need to remove the connection string to the Mongo database from our code as we will inject it from the deployment configuration for security.
+
+
+
+Make sure to commit the repo to your Github account. If you are unsure how to, go back to the terminal and run the following commands:
 
 ```bash
 git init git remote add origin git@github.com:<YOUR_GITHUB_USERNAME>/<YOUR_GITHUB_REPOSITORY>.git
@@ -1178,7 +1151,7 @@ We have a few fields to fill in:
 2. Select the git repository and select the branch where you pushed the code to. In my case, `master`.
 3. Enter the port 3001 we exposed from the server.
 5. Add the build command `yarn build` as we need to build the client
-6. Add MONGO_PWD as an environment variable with the password of the user you created on Mongo Atlas.
+6. Add CONNECTION_STRING as an environment variable with the connection string provided by Mongo Atlas.
 7. Name your application, `mern-blog`.
 
 Once you clicked on "Create App", Koyeb will take care of deploying your app in just a few seconds and return a public URL to try the app.
