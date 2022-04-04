@@ -191,7 +191,7 @@ Finally, we need to add an extra script to build the client `bundle.js` to be re
 }
 ```
 
-Let's run `npm install` in the terminal and we can now move to the client setup.
+Let's run `npm install` in the terminal to install the packages and we can now move to the client setup.
 
 First, at the root of your project directory create a folder `/client`, move into this folder and install React using `create-react-app`:
 
@@ -215,7 +215,14 @@ In the terminal, go ahead and install them:
 yarn add axios react-router-dom react-hook-form
 ```
 
-As both server and client share the same repo, the folder `/public` in the root will be used to return the static client after building it. To do so, we need to tweak the "build" script inside `/client/package.json` to build the static files in it:
+Finally, we are going to drop one file to prepare for our deployment: package-lock.json.
+
+From your project's root directory:
+```bash
+rm package-lock.json
+```
+
+For our application, the server and client share the same repository. This means we can use the folder /public located in the project's root directory to return the static client after it is built. To do this, we need to tweak the "build" script inside `/client/package.json` to build the static files in it:
 
 ```javascript
 {
@@ -633,7 +640,7 @@ To make sure the post was really created, we can make a call to `http://localhos
 
 NB: Since we have just one post, the result of the API calls should be almost the same as GET `/api/posts` returns an array of posts with a single item in it.
 
-If you want to update the post, for example if you want to change the title and add an extra tag, **add instructions about how to do this**:
+If you want to update the post, for example if you want to change the title and add an extra tag, you can pass the new data in the API call JSON body:
 
 [update-post]
 
