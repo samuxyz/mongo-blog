@@ -305,6 +305,8 @@ If you want to verify that you setup everything correctly, take a look at projec
 
 ```
 
+Go ahead and start the server by running `yarn dev` on the terminal, then open the browser at `http://localhost:3000` and if everything was setup correctly you should see a welcome message from Express.
+
 ### Create a database on Mongo Atlas
 
 The easiest way to setup our MongoDB database is to rely on a cloud service such as [Mongo Atlas](https://www.mongodb.com/cloud/atlas/lp/try2). They host databases on AWS, Google Cloud, Azure and provide several options to operate and scale MongoDB painlessly.
@@ -596,13 +598,15 @@ module.exports = app;
 ### Testing the endpoints using Postman
 
 In absence of a client we can use [POSTMAN](#https://www.postman.com/) to test our API as it is extremely flexible and easy to use:
-It allows us to specificy the type of request (GET, POST, PUT, DELETE etc.), the type of payload, if any, and several other option to fine-tune our tests
+It allows us to specificy the type of request (GET, POST, PUT, DELETE etc.), the type of payload, if any, and several other option to fine-tune our tests.
 
-We currently have an empty database so the very first test can be the creation of a post: Let's specify we want a POST request to `http://localhost:3001/api/posts`. For the body payload, select `raw` and choose `JSON` in the dropdown so that we can use JSON syntax to create it. Here is the result of the call:
+If you closed the server, go ahead and start it again in the terminal by running `yarn dev`.
+
+We currently have an empty database so the very first test can be the creation of a post: Let's specify we want a POST request to `http://localhost:3000/api/posts`. For the body payload, select `raw` and choose `JSON` in the dropdown so that we can use JSON syntax to create it. Here is the result of the call:
 
 [create-blog-post]
 
-To make sure the post was really created, we can make a call to `http://localhost:3001/api/posts` to get the full list of posts as well as `http://localhost:3001/api/posts/:post_id` to fetch the single post:
+To make sure the post was really created, we can make a call to `http://localhost:3000/api/posts` to get the full list of posts as well as `http://localhost:3000/api/posts/:post_id` to fetch the single post:
 
 [get-all-posts]
 [get-post]
@@ -699,6 +703,8 @@ In a few lines of code we created a decent layout that, once we implement `Home`
 
 [react-homepage]
 
+If you haven't yet, just go ahead and start create-react-app by running `yarn start` in the terminal: By default it runs on port 3000 which is currently used by the Express server. So, in the terminal create-react-app is going to suggest a different, most likely 3001. Click "Enter" and the client app will restart on port 3001.
+
 We previously defined the all the client routes, so we can add them all in `App` along with main components we will implement later:
 
 ```javascript
@@ -761,7 +767,7 @@ Add the following code:
 ```javascript
 import axios from 'axios';
 // When building the client into a static file, we do not need to include the server path as it is returned by it
-const domain = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
+const domain = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
 const http = (
   url,
@@ -1128,7 +1134,67 @@ Congratulations, we finished the UI as well so we are now ready to deploy our bl
 
 ## Deploy the app on Koyeb
 
-Before we dive into the steps to deploy on the Koyeb, we need to remove the connection string to the Mongo database from our code as we will inject it from the deployment configuration for security.
+Before we dive into the steps to deploy on the Koyeb, we need to remove the connection string to the Mongo database from our code as we will inject it from the deployment configuration for security. Open `app.js` and replace your connection string with `process.env.CONNECTION_STRING`:
+
+```javascript
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const CONNECTION_STRING = process.env.CONNECTION_STRING;
+
+const indexRouter = require('./routes/index');
+const postsRouter = require('./routes/posts');
+
+const app = express();
+
+// view engine setup to a
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+// setup connection to mongo
+mongoose.connect(CONNECTION_STRING);
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
+
+app.use('/', indexRouter);
+app.use('/api/posts', postsRouter);
+
+// Return the client
+app.get('/posts*', (_, res) => {
+  res.sendFile(path.join(__dirname, 'public') + '/index.html');
+});
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;
+
+```
 
 
 
@@ -1149,7 +1215,7 @@ We have a few fields to fill in:
 
 1. In "Deployment method", choose Github.
 2. Select the git repository and select the branch where you pushed the code to. In my case, `master`.
-3. Enter the port 3001 we exposed from the server.
+3. Enter the port 3000 we exposed from the server.
 5. Add the build command `yarn build` as we need to build the client
 6. Add CONNECTION_STRING as an environment variable with the connection string provided by Mongo Atlas.
 7. Name your application, `mern-blog`.
