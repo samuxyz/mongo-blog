@@ -19,10 +19,5 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
-  },
-  "nodemonConfig": {
-    "env": {
-      "MONGO_PWD": "koyeb"
-    }
   }
 }
