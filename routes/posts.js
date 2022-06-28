@@ -4,10 +4,38 @@ const Post = require('../models/post');
 
 /* GET posts */
 router.get('/', async (req, res, next) => {
-  const posts = await Post.find().sort({ createdAt: 'desc' });
+  const { search } = req.query;
+  let posts;
+  if (search) {
+    posts = await Post.aggregate(
+      [
+        {
+          '$search': {
+            'index': 'title_autocomplete', 
+            'autocomplete': {
+              'query': search, 
+              'path': 'title',
+            }
+          }
+        }, {
+          '$limit': 5
+        }, {
+          '$project': {
+            '_id': 1, 
+            'title': 1, 
+            'author': 1, 
+            'createdAt': 1,
+          }
+        }
+      ]
+    );
+  } else {
+    posts = await Post.find().sort({ createdAt: 'desc' });
+  }
+
   return res.status(200).json({
     statusCode: 200,
-    message: 'Fetched all posts',
+    message: 'Fetched posts',
     data: { posts },
   });
 });

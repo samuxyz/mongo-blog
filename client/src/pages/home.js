@@ -5,6 +5,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Image from 'react-bootstrap/Image';
 import http from '../lib/http';
 import formatDate from '../lib/formatDate';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 
 const Home = () => {
   const [posts, setPosts] = useState([]); 
@@ -15,6 +17,12 @@ const Home = () => {
     }
     fetchData();
   }, []);
+
+  const searchPost = async (e) => {
+    const searchValue = e.target.value;
+    const { data } = await http.get(`/api/posts?search=${searchValue}`);
+    setPosts(data.data.posts);
+  };
   
   return (
     <>
@@ -26,6 +34,15 @@ const Home = () => {
           className="d-block mx-auto img-fluid"
         />
         <h2 className="text-center">Welcome to the Digital Marketing blog</h2>
+        <Form>
+          <FormControl
+            type="search"
+            placeholder="Search"
+            className="me-5"
+            aria-label="Search"
+            onChange={searchPost}
+          />
+        </Form>
       </Container>
       <Container style={{ maxWidth: '800px' }}>
         <ListGroup variant="flush" as="ol">
